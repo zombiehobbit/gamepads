@@ -6,7 +6,7 @@ devices = [InputDevice(fn) for fn in util.list_devices()]
 for device in devices:
 
 	if device.name == 'Logitech Gamepad F710' or device.name == 'Logitech Gamepad F310':
-		gamePad = InputDevice(device)
+		gamePad = InputDevice(device.fn)
 		break
 
 

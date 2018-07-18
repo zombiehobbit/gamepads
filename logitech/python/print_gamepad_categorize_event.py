@@ -6,7 +6,7 @@ devices = [evdev.InputDevice(fn) for fn in evdev.list_devices()]
 for device in devices:
 
 	if device.name == 'Logitech Gamepad F710' or device.name == 'Logitech Gamepad F310':
-		gamePad = evdev.InputDevice(device)
+		gamePad = evdev.InputDevice(device.fn)
 		break
 
 
