@@ -60,6 +60,25 @@ Date: 6/23/2018
     specific gamepad applications.
 
 
+*******************************************************
+*
+*  Linux input group 
+*
+*******************************************************
+
+User must be a member of group input
+
+
+To see user's group memberships
+
+$ groups userName
+
+
+To add user to the group
+
+$ sudo usermod -aG input userName
+
+Then the user must logout and log back in.
 
 *******************************************************
 *  How to build and run the program
