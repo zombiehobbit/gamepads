@@ -9,3 +9,8 @@ logitech.o: logitech.c logitech.h
 	gcc -Wall -Wextra -c logitech.c
 
 
+clean:
+	rm -f etest
+	rm -f *.o
+
+
