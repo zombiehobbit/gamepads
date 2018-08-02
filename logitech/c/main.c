@@ -14,7 +14,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
-#include "logitech.h"
+#include "gamepad.h"
 
 volatile bool keepRunning = true;
 
