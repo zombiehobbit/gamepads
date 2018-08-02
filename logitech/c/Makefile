@@ -18,6 +18,11 @@ main.o: main.c gamepad.h
 gamepad.o: gamepad.c gamepad.h
 	gcc -Wall -Wextra -c gamepad.c
 
+# NOTE: for some reason this isn't loading
+# build rules for the tcp_client
+tcp_client.o: tcp_client.h tcp_client.c
+	gcc -Wall -Wextra -c tcp_client.c
+
 clean:
 	rm -f etest
 	rm -f *.o
