@@ -14,8 +14,9 @@
 #include <unistd.h>
 #include <linux/joystick.h>
 #include "gamepad.h"
+#define MAXDATASIZE 100 /* max number of bytes we can get at once */
 
-int connect(unsigned char *address,unsigned int port);
-int sendString(int sockfd,char *msg);
+int connect_client(const char *address,unsigned int port);
+int send_string(int sockfd,char *msg);
 
 #endif

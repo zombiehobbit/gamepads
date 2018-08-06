@@ -1,13 +1,17 @@
 #include "tcp_client.h"
 
-int connect(unsigned char *address,unsigned int port)
+int connect_client(const char *address,unsigned int port)
 {
 	int sockfd, numbytes;
 	char buf[MAXDATASIZE];
 	struct hostent *he;
 	struct sockaddr_in their_addr; /* connector's address information */
 
-	if ((he=gethostbyname(argv[1])) == NULL)
+	//const char *adr = "127.0.0.1"; // constant char for address
+	const char *adr = address; // this is some kind of odd, but quck, fix.
+
+	//if (he=gethostbyname(address) == NULL)
+	if((he = gethostbyname(adr)) == NULL)
 	{
 		printf("%s\n","getting host name failed");
 		return -1;
@@ -21,7 +25,7 @@ int connect(unsigned char *address,unsigned int port)
 
 	their_addr.sin_family = AF_INET; // byte for the for host
 	their_addr.sin_port = htons(port); // switching over to network byte order
-	their_addr.sin_addr = *((struct in_addr *)he->h_addr);
+	their_addr.sin_addr = *((struct in_addr *)he->h_addr); 
 	bzero(&(their_addr.sin_zero), 8);     /* zero the rest of the struct */
 
 	// connect the socket
@@ -35,7 +39,7 @@ int connect(unsigned char *address,unsigned int port)
 	return sockfd;
 }
 
-int sendString(int sockfd,unsigned char *msg)
+int send_string(int sockfd,char *msg)
 {
 	int sent_bytes,bytes_to_send;
 	bytes_to_send = strlen(msg);

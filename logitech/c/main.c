@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "gamepad.h"
+#include "tcp_client.h"
 
 volatile bool keepRunning = true;
 
@@ -27,7 +28,7 @@ void intHandler(){
 int main()
 {
     int sockfd=-1; // socket to the client
-
+    sockfd = connect_client("127.0.0.1",9999); // open a tcp connection to the robot car
 
     const char defaultPath[64] = "/dev/input/js0";
 
@@ -99,6 +100,7 @@ int main()
     if(sockfd > -1)
     {
       printf("%s\n","closing socket");
+      send_string(sockfd,"hi there! This should be coded in fourth reeeeeeee");
       close(sockfd);
     }
 
