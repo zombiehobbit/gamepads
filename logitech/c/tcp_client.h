@@ -5,25 +5,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <errno.h> 
-#include <string.h> 
-#include <netdb.h> 
-#include <sys/types.h> 
-#include <netinet/in.h> 
-#include <sys/socket.h> 
+#include <errno.h>
+#include <string.h>
+#include <netdb.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
 #include <unistd.h>
 #include <linux/joystick.h>
+#include "gamepad.h"
 
-	typedef struct 
-	{
-		int sock_fd;
-		struct hostent *he;
-        	struct sockaddr_in their_addr;
-	}car_server;
-
-	int connect(car_server*,char*,unsigned short);
-	int destory(car_server*);
-	int send_gamepad(const gamepad *);
-	
+int connect(unsigned char *address,unsigned int port);
+int sendString(int sockfd,char *msg);
 
 #endif

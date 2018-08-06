@@ -1,20 +1,73 @@
 #include "tcp_client.h"
 
-int connect(car_server *server, char *address,unsigned short port)
+int connect(unsigned char *address,unsigned int port)
 {
-	server-> he = gethostbyname(address);
-	server-> sock_fd =  socket(AF_INET, SOCK_STREAM);
-	
-	if(server->he == -1) // host lookup failed
-		return -1;
+	int sockfd, numbytes;
+	char buf[MAXDATASIZE];
+	struct hostent *he;
+	struct sockaddr_in their_addr; /* connector's address information */
 
-	if(server->sock_fd == -1) // failed to connect socket
+	if ((he=gethostbyname(argv[1])) == NULL)
+	{
+		printf("%s\n","getting host name failed");
 		return -1;
-		
-	their_addr.sin_family = AF_INE
-	their_addr.sin_port = htons(PORT);
-	their_addr.sin_addr = *((struct in_addr *)server->he->h_addr);
-	
+	}
 
-	return 0; // stub
+	if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+	{
+		printf("%s\n","what in the name of @#$#$# failed to assign fd for socket");
+		return -1;
+	}
+
+	their_addr.sin_family = AF_INET; // byte for the for host
+	their_addr.sin_port = htons(port); // switching over to network byte order
+	their_addr.sin_addr = *((struct in_addr *)he->h_addr);
+	bzero(&(their_addr.sin_zero), 8);     /* zero the rest of the struct */
+
+	// connect the socket
+	if(connect(sockfd,(struct sockaddr*)&their_addr,sizeof(struct sockaddr)) == -1)
+	{
+		printf("%s\n","could not connect to the client...");
+		return -1;
+	}
+
+
+	return sockfd;
 }
+
+int sendString(int sockfd,unsigned char *msg)
+{
+	int sent_bytes,bytes_to_send;
+	bytes_to_send = strlen(msg);
+	while(bytes_to_send > 0)
+	{
+		sent_bytes = send(sockfd,msg,bytes_to_send,0);
+		if(sent_bytes == -1)
+		{
+			return 0;
+		}
+
+		bytes_to_send -= sent_bytes;
+		msg += sent_bytes;
+	}
+	return 1;
+}
+
+// int connect(car_server *server, char *address,unsigned short port)
+// {
+// 	server-> he = gethostbyname(address);
+// 	server-> sock_fd =  socket(AF_INET, SOCK_STREAM);
+//
+// 	if(server->he == -1) // host lookup failed
+// 		return -1;
+//
+// 	if(server->sock_fd == -1) // failed to connect socket
+// 		return -1;
+//
+// 	their_addr.sin_family = AF_INE
+// 	their_addr.sin_port = htons(PORT);
+// 	their_addr.sin_addr = *((struct in_addr *)server->he->h_addr);
+//
+//
+// 	return 0; // stub
+// }

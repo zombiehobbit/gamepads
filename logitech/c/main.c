@@ -1,12 +1,12 @@
 /** Filename: main.c
- * 
+ *
  *  Description:
- * 
+ *
  *      Open connection to gamepad on path /dev/input/jso
  *      Read and print gamepad events and values
- * 
+ *
  *     ctrl + c  terminates program
- * 
+ *
  */
 
 #include <errno.h>
@@ -26,6 +26,9 @@ void intHandler(){
 
 int main()
 {
+    int sockfd=-1; // socket to the client
+
+
     const char defaultPath[64] = "/dev/input/js0";
 
     gamepad gpad;
@@ -44,7 +47,7 @@ int main()
         puts("sigfillset failed");
         return 1;
     }
-    
+
     act.sa_flags=0;
     if (sigaction(SIGINT,&act,0) < 0){ // Setup signal
         puts("sigaction failed");
@@ -59,19 +62,19 @@ int main()
         fprintf(stderr, "program termination, gamepad initialize failed\n");
         destructGamepad(&gpad);
     }
-        
+
     printDeviceInfo(&gpad);
 
 
     while(keepRunning)
     {
         /* read(int fd, void *buf, size_t count)
-            read attempts to read up to count bytes from the 
+            read attempts to read up to count bytes from the
             file descriptor fd and store the bytes in buf
 
             not an error if less bytes are read
 
-            returns -1 for error 
+            returns -1 for error
         */
         bytesRead = read (gpad.fd, &gpad.event, sizeof(struct js_event));
 
@@ -92,7 +95,14 @@ int main()
         }
     } // end while
 
-    
+    // disconnect from the host
+    if(sockfd > -1)
+    {
+      printf("%s\n","closing socket");
+      close(sockfd);
+    }
+
+    printf("%s\n","disconnecting game pad");
     destructGamepad(&gpad);
     return 0;
 }
