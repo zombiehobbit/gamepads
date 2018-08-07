@@ -82,6 +82,7 @@ int main()
         // bytesRead may not equal the number of bytes requested
         if(bytesRead == sizeof(struct js_event)){
             printEventInfo(&gpad);
+            send_string(sockfd,"joystick stuff happend");
         }
         else if(bytesRead == -1){
             fprintf(stderr, "error reading gamepad, %s\n", strerror(errno));
@@ -100,7 +101,7 @@ int main()
     if(sockfd > -1)
     {
       printf("%s\n","closing socket");
-      send_string(sockfd,"hi there! This should be coded in fourth reeeeeeee");
+      send_string(sockfd,"halt");
       close(sockfd);
     }
 
