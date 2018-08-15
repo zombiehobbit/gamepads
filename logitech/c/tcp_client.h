@@ -18,5 +18,6 @@
 
 int connect_client(const char *address,unsigned int port);
 int send_string(int sockfd,char *msg);
+int send_gamepad_data(const gamepad *gpad,int sockfd); // send data from the gamepad to a tcp client
 
 #endif

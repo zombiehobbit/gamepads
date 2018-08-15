@@ -57,6 +57,14 @@ int send_string(int sockfd,char *msg)
 	return 1;
 }
 
+int send_gamepad_data(const gamepad *gpad,int sockfd)
+{
+	// robot is running when the right bumper is depressed, make sure that the right bumber is depressed
+	
+
+	return 0;
+}
+
 // int connect(car_server *server, char *address,unsigned short port)
 // {
 // 	server-> he = gethostbyname(address);
