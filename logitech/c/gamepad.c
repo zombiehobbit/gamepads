@@ -20,7 +20,7 @@
 #include <stdio.h>                      // fprintf
 #include <stdlib.h>                     // malloc
 #include <sys/ioctl.h>
-
+#define DEBUG
 
 
 
@@ -155,12 +155,38 @@ void printEventInfo(const gamepad *gpad)
         break;
         case JS_EVENT_BUTTON | JS_EVENT_INIT:
             printf("JS_EVENT_BUTTON | JS_EVENT_INIT\n");
-        break;
+        break;   
         case JS_EVENT_AXIS | JS_EVENT_INIT:
             printf("JS_EVENT_AXIS | JS_EVENT_INIT\n");
         break;
         default:
             printf("Unknown joystick event\n");
     }
+}
+
+int getMainJoystick(const gamepad *gpad)
+{
+	int retv = 0;
+
+	if(gpad->event.type == JS_EVENT_AXIS)
+	{
+		#ifdef DEBUG
+		printf("joystick event id: %d\n",(*gpad).event.number);
+		printf("joystick event value: %d\n",gpad->event.value);
+		#endif
+		
+		int gpadValue = gpad->event.value; // get the value from the joystick 
+		// normalise the value 
+		if(gpadValue > -5 && gpadValue < 5) // in nutral 
+		{
+			#ifdef DEBUG
+			printf("%s\n","controller in nutral");
+			#endif
+			retv = 0;
+		}
+		
+	}
+	
+	return retv;
 }
 

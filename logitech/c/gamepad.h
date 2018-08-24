@@ -25,7 +25,7 @@ void destructGamepad(gamepad *gpad);
 
 void printDeviceInfo(const gamepad *gpad);
 void printEventInfo(const gamepad *gpad);
-
+int getMainJoystick(const gamepad *gpad);
 
 #endif // LOGITECHJOYSTICK_H_INCLUDED
 

@@ -28,7 +28,7 @@ void intHandler(){
 int main()
 {
     int sockfd=-1; // socket to the client
-    sockfd = connect_client("127.0.0.1",9999); // open a tcp connection to the robot car
+    sockfd = connect_client("127.0.0.1",9999); // open a tcp connection to the robot car, or some other server 
 
     const char defaultPath[64] = "/dev/input/js0";
 
@@ -81,8 +81,9 @@ int main()
 
         // bytesRead may not equal the number of bytes requested
         if(bytesRead == sizeof(struct js_event)){
-            printEventInfo(&gpad);
-            send_string(sockfd,"joystick stuff happend");
+            //printEventInfo(&gpad);
+            //send_string(sockfd,"joystick stuff happend");
+			int jspos = getMainJoystick(&gpad);
         }
         else if(bytesRead == -1){
             fprintf(stderr, "error reading gamepad, %s\n", strerror(errno));
@@ -104,6 +105,10 @@ int main()
       send_string(sockfd,"halt");
       close(sockfd);
     }
+	else
+	{
+		printf("%s\n","gamepad was never connected to the socket");
+	}
 
     printf("%s\n","disconnecting game pad");
     destructGamepad(&gpad);
