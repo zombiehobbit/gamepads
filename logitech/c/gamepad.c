@@ -20,7 +20,7 @@
 #include <stdio.h>                      // fprintf
 #include <stdlib.h>                     // malloc
 #include <sys/ioctl.h>
-#define DEBUG
+//#define DEBUG
 
 
 
@@ -164,6 +164,7 @@ void printEventInfo(const gamepad *gpad)
     }
 }
 
+/*
 int getMainJoystick(const gamepad *gpad)
 {
 	int retv = 0;
@@ -189,4 +190,4 @@ int getMainJoystick(const gamepad *gpad)
 	
 	return retv;
 }
-
+*/

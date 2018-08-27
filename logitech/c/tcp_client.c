@@ -1,4 +1,5 @@
 #include "tcp_client.h"
+#define DEBUG
 
 int connect_client(const char *address,unsigned int port)
 {
@@ -60,8 +61,27 @@ int send_string(int sockfd,char *msg)
 int send_gamepad_data(int sockfd,int mainjoystick_x,int mainjoystick_y,int main_button)
 {
 	// Convert all those stuff for a mashine
+	char joystickx[16];
+	char joysticky[16];
+	bool mbutton;
 	
+	sprintf(joystickx,"%d",mainjoystick_x);
+	sprintf(joysticky,"%d",mainjoystick_y);
+
 	
+
+	#ifdef DEBUG
+	printf("joystick x: %s\n",joystickx);
+	printf("joystick y: %s\n",joysticky);
+	
+	// NOTE: 1 line rule used here.
+	printf("mbutton: ");
+	if(mbutton == true)
+		printf("%s\n","true");
+	else
+		printf("%s\n","false");
+
+	#endif
 
 	return -1; // stub
 }

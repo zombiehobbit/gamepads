@@ -83,7 +83,7 @@ int main()
         if(bytesRead == sizeof(struct js_event)){
             //printEventInfo(&gpad);
             //send_string(sockfd,"joystick stuff happend");
-			int jspos = getMainJoystick(&gpad);
+			//int jspos = getMainJoystick(&gpad); // NOTE: Function deleted 
         }
         else if(bytesRead == -1){
             fprintf(stderr, "error reading gamepad, %s\n", strerror(errno));
@@ -107,7 +107,7 @@ int main()
     }
 	else
 	{
-		printf("%s\n","gamepad was never connected to the socket");
+		printf("%s\n","if nothing worked, than was was b/c gamepad was never connected to the socket");
 	}
 
     printf("%s\n","disconnecting game pad");
