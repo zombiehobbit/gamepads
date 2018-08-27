@@ -30,6 +30,12 @@ int main()
     int sockfd=-1; // socket to the client
     sockfd = connect_client("127.0.0.1",9999); // open a tcp connection to the robot car, or some other server 
 
+	if(sockfd == -1)
+	{
+		printf("%s\n","could not connect to server... \n press enter to continue");
+		getc(stdin);
+	}
+
     const char defaultPath[64] = "/dev/input/js0";
 
     gamepad gpad;
