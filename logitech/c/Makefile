@@ -12,8 +12,8 @@ CC=gcc # use GCC unless otherewise stated
 
 #etest: main.o logitech.o
 #	g++ -o etest main.o logitech.o
-etest: main.o gamepad.o tcp_client.o
-	g++ -o etest main.o gamepad.o tcp_client.o
+etest: main.o gamepad.o tcp_client.o nonblockingInput.o
+	g++ -o etest main.o gamepad.o tcp_client.o nonblockingInput.o
 
 
 #main.o: main.c logitech.h
@@ -33,6 +33,9 @@ gamepad.o: gamepad.c gamepad.h
 # build rules for the tcp_client
 tcp_client.o: tcp_client.h tcp_client.c
 #	gcc -Wall -Wextra -c -g tcp_client.c
+
+# build rule for nonblockingInput
+nonblockingInput.o: nonblockingInput.h nonblockingInput.c
 
 clean:
 	rm -f etest
