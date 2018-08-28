@@ -13,12 +13,13 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <linux/joystick.h>
+#include <json_object.h> // imported for json support 
 #include "gamepad.h"
 #define MAXDATASIZE 100 /* max number of bytes we can get at once */
 
 int connect_client(const char *address,unsigned int port);
 int send_string(int sockfd,char *msg);
 int send_gamepad_data(int sockfd,int mainjoystick_x,int mainjoystick_y,int main_button); // send data from the gamepad to a tcp client
-
+int parse_command(const char *device,const char *command,char *buffer);
 
 #endif

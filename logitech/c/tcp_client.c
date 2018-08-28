@@ -58,6 +58,11 @@ int send_string(int sockfd,char *msg)
 	return 1;
 }
 
+int parse_command(const char *device,const char *command,char *buffer)
+{
+	//json_object data;
+}
+
 int send_gamepad_data(int sockfd,int mainjoystick_x,int mainjoystick_y,int main_button)
 {
 	// Convert all those stuff for a mashine

@@ -42,7 +42,7 @@ int main()
 
 	if(sockfd == -1)
 	{
-		printf("%s\n","could not connect to server... \n press enter to continue. \n I'm sorry. :( I'm doing my");
+		printf("%s\n","could not connect to server... \n press enter to continue. \n I'm sorry. :( ");
 		getc(stdin);
 	}
 
@@ -93,6 +93,7 @@ int main()
 		SetKeyboardNonBlock(&term_settings);
 	}
 
+	int stickX=0,stickY=0,button=0;
 
     while(keepRunning)
     {
@@ -132,30 +133,53 @@ int main()
 			// do non blocking keyboard input stuff here...
 			char key = 0;
 			key = getchar();
+			//bool keys[4] = {false,false,false,false}; 	
 			
-			if(key == 'w')
-			{
-				printf("%s\n","up");
-			}
-			if(key == 's')
-			{
-				printf("%s\n","down");
-			}
-			if(key == 'a')
-			{
-				printf("%s\n","left");
-			}			
-			if(key == 'd')
-			{
-				printf("%s\n","right");
-			}
 
+			if(sockfd > 0) // make sure we have a network connection
+			{
+
+				if(key == 'w') // forward
+				{
+					//keys[0] = true;		
+					stickX = 100;	
+				}
+				if(key == 's') // backward
+				{
+					//keys[1] = true;
+					stickX = -100;
+				}
+				if(key == 'a') // turn left
+				{
+					//keys[2] = true;
+					stickY = 100;
+				}			
+				if(key == 'd') // turn right
+				{
+					//keys[2] = true;
+					stickY = -100;
+				}
+				if(key == 'j') // main button
+				{
+
+				}
+				if(key == 32) // full stop
+				{
+					stickY = 0;
+					stickX = 0;
+				}
+				// send the key codes back to the client
+				// NOTE: main button is a stub
+				send_gamepad_data(sockfd,stickX,stickY,0);
+			
+			}
+		
 			// test for a quit condition
 			if(key == 'q')
 			{
 				printf("%s\n","quit button pressed, good bye!");
 				keepRunning = false;
-			}
+			} 
 
 
 	// this is the old way of doing this.  We're using a spiffy new way.  See the non bloc
