@@ -1,0 +1,6 @@
+
+This program requires json and keyboard libs to compile.  Here's how you get that to work
+
+sudo apt-get install libncurses5-dev libncursesw5-dev // NOT USED!!!!!
+sudo apt-get install libjson-c-dev // but install this one!
+

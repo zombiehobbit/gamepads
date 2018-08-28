@@ -9,13 +9,20 @@
  *
  */
 
+
 #include <errno.h>
 #include <signal.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+//#include <curses.h>
+#include <termios.h> // included for doing the non blocking keyboard stuff 
 #include "gamepad.h"
 #include "tcp_client.h"
+// do some dumb typing stuff
+#define KEYBOARD 0
+#define GAMEPAD 1
+
 
 volatile bool keepRunning = true;
 
@@ -27,6 +34,8 @@ void intHandler(){
 
 int main()
 {
+	char inputDevice = GAMEPAD;
+	
     int sockfd=-1; // socket to the client
     sockfd = connect_client("127.0.0.1",9999); // open a tcp connection to the robot car, or some other server 
 
@@ -63,14 +72,18 @@ int main()
 
 
     // open connection to gamepad
-    if(connectGamepad(defaultPath, &gpad))
+    if(connectGamepad(defaultPath, &gpad)){
         fprintf(stderr, "gamepad initialized\n");
-    else{
+		printDeviceInfo(&gpad);
+    }else{
         fprintf(stderr, "program termination, gamepad initialize failed\n");
         destructGamepad(&gpad);
+		// failed to open gamepad, now using keyboard
+		printf("%s\n","gamepad could not be opened, now using keyboard interface");
+		inputDevice = KEYBOARD;
     }
 
-    printDeviceInfo(&gpad);
+    //printDeviceInfo(&gpad);
 
 
     while(keepRunning)
@@ -83,25 +96,47 @@ int main()
 
             returns -1 for error
         */
-        bytesRead = read (gpad.fd, &gpad.event, sizeof(struct js_event));
 
-        // bytesRead may not equal the number of bytes requested
-        if(bytesRead == sizeof(struct js_event)){
-            //printEventInfo(&gpad);
-            //send_string(sockfd,"joystick stuff happend");
-			//int jspos = getMainJoystick(&gpad); // NOTE: Function deleted 
-        }
-        else if(bytesRead == -1){
-            fprintf(stderr, "error reading gamepad, %s\n", strerror(errno));
-            keepRunning = false;
-        }
-        else{
-            fprintf(stderr, "warning, read %ld bytes, requested %ld\n", bytesRead, sizeof(struct js_event));
-            ++incompleteReadCount;
-            if(incompleteReadCount >= 4){
-                keepRunning = false;
-            }
-        }
+		if(inputDevice == GAMEPAD)
+		{
+        	bytesRead = read (gpad.fd, &gpad.event, sizeof(struct js_event));
+
+        	// bytesRead may not equal the number of bytes requested
+        	if(bytesRead == sizeof(struct js_event)){
+            	//printEventInfo(&gpad);
+            	//send_string(sockfd,"joystick stuff happend");
+				//int jspos = getMainJoystick(&gpad); // NOTE: Function deleted 
+        	}
+        	else if(bytesRead == -1){
+            	fprintf(stderr, "error reading gamepad, %s\n", strerror(errno));
+            	keepRunning = false;
+        	}
+        	else{
+         	   fprintf(stderr, "warning, read %ld bytes, requested %ld\n", bytesRead, sizeof(struct js_event));
+            	++incompleteReadCount;
+            	if(incompleteReadCount >= 4){
+                	keepRunning = false;
+            	}
+        	}
+		}
+		else if(inputDevice == KEYBOARD)
+		{
+			// do non blocking keyboard input stuff here...
+
+/*
+			//char keyin = getchar();
+			char keyin = getch();
+			switch(keyin)
+			{
+				case 'w':
+					printf("%s\n","UP");
+					break;
+				case 's':
+					printf("%s\n","DOWN");
+			}
+*/
+			
+		}
     } // end while
 
     // disconnect from the host
@@ -116,7 +151,11 @@ int main()
 		printf("%s\n","if nothing worked, than was was b/c gamepad was never connected to the socket");
 	}
 
-    printf("%s\n","disconnecting game pad");
-    destructGamepad(&gpad);
+	if(inputDevice == GAMEPAD)
+	{
+    	printf("%s\n","disconnecting game pad");
+    	destructGamepad(&gpad);
+	}
+
     return 0;
 }
