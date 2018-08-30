@@ -1,5 +1,5 @@
 #include "tcp_client.h"
-#define DEBUG
+//#define DEBUG
 
 int connect_client(const char *address,unsigned int port)
 {

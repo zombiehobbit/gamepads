@@ -23,6 +23,7 @@
 // do some dumb typing stuff
 #define KEYBOARD 0
 #define GAMEPAD 1
+//#define DEMO // macro def for demo mode 
 
 volatile bool keepRunning = true;
 
@@ -34,10 +35,18 @@ void intHandler(){
 
 int main()
 {
+	#ifdef DEMO
+	printf("%s\n","control program has started up in demo mode");
+	sleep(3);
+	#endif
+
 	char inputDevice = GAMEPAD;
 	struct termios term_settings; // keyboard only settings.  Only unly used when we're running in keyboard mode 
 	
-    int sockfd=-1; // socket to the client
+	int sockfd;
+
+	#ifndef DEMO
+    sockfd=-1; // socket to the client
     sockfd = connect_client("127.0.0.1",9999); // open a tcp connection to the robot car, or some other server 
 
 	if(sockfd == -1)
@@ -45,6 +54,7 @@ int main()
 		printf("%s\n","could not connect to server... \n press enter to continue. \n I'm sorry. :( ");
 		getc(stdin);
 	}
+	#endif
 
     const char defaultPath[64] = "/dev/input/js0";
 
@@ -133,8 +143,13 @@ int main()
 			// do non blocking keyboard input stuff here...
 			char key = 0;
 			key = getchar();
+			//printf("key: %d\n",key);
 			//bool keys[4] = {false,false,false,false}; 	
 			
+			// set the socket to 10 so we can run the input
+			#ifdef DEMO
+			sockfd = 10; 
+			#endif
 
 			if(sockfd > 0) // make sure we have a network connection
 			{
@@ -168,12 +183,39 @@ int main()
 					stickY = 0;
 					stickX = 0;
 				}
+			
+				// print out some fake data 
+				#ifdef DEMO
+				if(key != -1)
+				{
+					printf("%s","sent command: ");
+					if(key == 'w')
+					{
+						printf("UP");
+					}
+					else if(key == 's')
+					{
+						printf("DOWN");
+					}
+					else if(key == 'a')
+					{
+						printf("LEFT");
+					}
+					else if(key == 'd')
+					{
+						printf("RIGHT");
+					}
+					printf("\tRobot heading: %d, robotspeed: %d m/s ,robotbattery: %.2f % \n",0,10,0.90);
+				}
+
+				#else // run the actuall program
 				// send the key codes back to the client
 				// NOTE: main button is a stub
 				send_gamepad_data(sockfd,stickX,stickY,0);
-			
+				#endif
+
 			}
-		
+
 			// test for a quit condition
 			if(key == 'q')
 			{
